@@ -18,13 +18,18 @@ namespace GryDoPrzejscia.Pages.GamesList
         }
         public void OnGet()
         {
+
         }
 
         public async Task<IActionResult> OnPost()
-        {
-            await _db.GameList.AddAsync(GameList);
-            await _db.SaveChangesAsync();
-            return RedirectToPage("Index");
+        {            
+            if (ModelState.IsValid)
+            {
+                await _db.GameList.AddAsync(GameList);
+                await _db.SaveChangesAsync();
+                return RedirectToPage("Index");
+            }
+            return Page();
         }
 
     }
