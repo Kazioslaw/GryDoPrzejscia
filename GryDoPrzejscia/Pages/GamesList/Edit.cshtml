@@ -1,7 +1,8 @@
 ﻿@page
-@model GryDoPrzejscia.Pages.GamesList.CreateModel
+@model GryDoPrzejscia.Pages.GamesList.EditModel
 
 <form method="post">
+    <input hidden asp-for="GameList.Id" />
     <div class="border p-3 mt-4">
         <div class="row pb-2">
             <h2 class="text-primary pl-3">Add new Game to list</h2>
@@ -10,23 +11,23 @@
         <div asp-validation-summary="All"></div>
         <div class="mb-3">
             <label asp-for="GameList.Name"></label>
-            <input asp-for="GameList.Name" type="Text" />
+            <input asp-for="GameList.Name" class="form-control" />
             <span asp-validation-for="GameList.Name" class="text-danger"></span>
         </div>
         <div class="mb-3">
             <label asp-for="GameList.Launcher"></label>
-            <input asp-for="GameList.Launcher" type="Text" />
+            <input asp-for="GameList.Launcher" class="form-control" />
             <span asp-validation-for="GameList.Launcher" class="text-danger"></span>
         </div>
-        @*<div class="mb-3">
-        <label asp-for="GameList.isPlayed"></label>
-        <input asp-for="GameList.isPlayed" type="checkbox" name="isPlayed" />
+        <div class="mb-3">
+            <label asp-for="GameList.isPlayed"></label>
+            <input asp-for="GameList.isPlayed" type="checkbox" name="Gram" />
         </div>
         <div class="mb-3">
-        <label asp-for="GameList.IsFinished"></label>
-        <input asp-for="GameList.IsFinished" type="checkbox" name="isFinished" />
-        </div>*@
-        <button type="submit" class="btn btn-primary" style="width:150px;">Add</button>
+            <label asp-for="GameList.isFinished"></label>
+            <input asp-for="GameList.isFinished" type="checkbox" name="Przeszedłem" />
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:150px">Update</button>
         <a asp-page="Index" class="btn btn-secondary" style="width:150px;">Back To Lists</a>
     </div>
 </form>

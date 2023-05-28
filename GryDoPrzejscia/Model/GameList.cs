@@ -21,6 +21,6 @@ namespace GryDoPrzejscia.Model
 
         [Column("Przeszedłem")]
         [DefaultValue(false)]
-        public bool IsFinished { get; set; }
+        public bool isFinished { get; set; }
     }
 }
