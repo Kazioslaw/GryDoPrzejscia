@@ -27,6 +27,7 @@ namespace GryDoPrzejscia.Pages.GamesList
             {
                 await _db.GameList.AddAsync(GameList);
                 await _db.SaveChangesAsync();
+                TempData["success"] = "Gra dodana pomyœlnie";
                 return RedirectToPage("Index");
             }
             return Page();

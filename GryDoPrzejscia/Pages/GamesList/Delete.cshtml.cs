@@ -28,6 +28,7 @@ namespace GryDoPrzejscia.Pages.GamesList
             {
                 _db.GameList.Remove(GameList);
                 await _db.SaveChangesAsync();
+                TempData["success"] = "Gra usuniêta pomyœlnie";
                 return RedirectToPage("Index");
             }
             return Page();

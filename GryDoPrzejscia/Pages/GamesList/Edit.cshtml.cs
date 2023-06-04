@@ -28,6 +28,7 @@ namespace GryDoPrzejscia.Pages.GamesList
             {
                 _db.GameList.Update(GameList);
                 await _db.SaveChangesAsync();
+                TempData["success"] = "Gra edytowana pomyœlnie";
                 return RedirectToPage("Index");
             }
             return Page();
