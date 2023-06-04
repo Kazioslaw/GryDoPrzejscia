@@ -43,10 +43,10 @@
                         @obj.Launcher
                     </td>
                     <td>
-                        <input type="checkbox" @(obj.isPlayed ? true : false)>
+                        <input type="checkbox" @(obj.isPlayed ? "checked" : "") disabled>
                     </td>
                     <td>
-                        <input type="checkbox" @(obj.isFinished ? true : false)>
+                        <input type="checkbox" @(obj.isFinished ? "checked" : "") disabled>
                     </td>
                     <td>
                         <div class="w-75 btn-group" role="group">
