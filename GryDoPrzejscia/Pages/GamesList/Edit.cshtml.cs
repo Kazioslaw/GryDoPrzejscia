@@ -22,17 +22,29 @@ namespace GryDoPrzejscia.Pages.GamesList
             GameList = _db.GameList.Find(id);
         }
 
-        public async Task<IActionResult> OnPost()
-        {            
+        public async Task<IActionResult> OnPost([FromForm] GameList gameList)
+        {
             if (ModelState.IsValid)
             {
-                _db.GameList.Update(GameList);
-                await _db.SaveChangesAsync();
-                TempData["success"] = "Gra edytowana pomyœlnie";
-                return RedirectToPage("Index");
+                try
+                {
+                    var gameListFromDb = await _db.GameList.FindAsync(gameList.Id);
+                    gameListFromDb.isPlayed = gameList.isPlayed;
+                    gameListFromDb.isFinished = gameList.isFinished;
+
+                    await _db.SaveChangesAsync();
+
+                    TempData["success"] = "Gra edytowana pomyœlnie";
+                    return RedirectToPage("Index");
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    TempData["error"] = "Wyst¹pi³ b³¹d podczas edycji gry.";
+                    return RedirectToPage("Index");
+                }
             }
+
             return Page();
         }
-
     }
 }

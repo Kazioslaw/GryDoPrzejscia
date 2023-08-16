@@ -13,6 +13,13 @@
         </div>
     </div>
     <br /><br />
+
+    <div class="row pb-3">
+        <div class="col-12">
+            <input id="searchInput" type="text" class="form-control" placeholder="Wyszukaj grę...">
+        </div>
+    </div>
+
     <table class="table table-bordered table-striped" style="width:100%">
         <thead>
             <tr>
@@ -48,16 +55,32 @@
                     </td>
                     <td>
                         <div class="w-75 btn-group" role="group">
-                        <a asp-page="Edit" asp-route-id="@obj.Id" class="btn btn-primary mx-2">
-                            <i class="bi bi-pencil-square"></i>
-                        </a>
+                            <a asp-page="Edit" asp-route-id="@obj.Id" class="btn btn-primary mx-2">
+                                <i class="bi bi-pencil-square"></i>
+                            </a>
                             <a asp-page="Delete" asp-route-id="@obj.Id" class="btn btn-danger mx-2">
-                            <i class="bi bi-trash"></i>
-                        </a>
+                                <i class="bi bi-trash"></i>
+                            </a>
                         </div>
                     </td>
                 </tr>
-            }       
+            }
         </tbody>
     </table>
 </div>
+
+<script>
+    document.getElementById("searchInput").addEventListener("input", function () {
+        var searchText = this.value.toLowerCase();
+        var rows = document.querySelectorAll("tbody tr");
+
+        rows.forEach(function (row) {
+            var nameCell = row.querySelector("td:nth-child(1)");
+            var launcherCell = row.querySelector("td:nth-child(2)");
+            var isVisible = nameCell.textContent.toLowerCase().includes(searchText) ||
+                            launcherCell.textContent.toLowerCase().includes(searchText);
+
+            row.style.display = isVisible ? "" : "none";
+        });
+    });
+</script>

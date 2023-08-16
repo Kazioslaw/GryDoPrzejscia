@@ -23,16 +23,34 @@ namespace GryDoPrzejscia.Pages.GamesList
 
         public async Task<IActionResult> OnPost()
         {
-            var gameFromDb = _db.GameList.Find(GameList.Id);
-            if (gameFromDb != null)
+            if (ModelState.IsValid)
             {
-                _db.GameList.Remove(GameList);
-                await _db.SaveChangesAsync();
-                TempData["success"] = "Gra usuniêta pomyœlnie";
-                return RedirectToPage("Index");
+                try
+                {
+                    var gameListFromDb = await _db.GameList.FindAsync(GameList.Id);
+
+                    if (gameListFromDb != null)
+                    {
+                        _db.GameList.Remove(gameListFromDb);
+                        await _db.SaveChangesAsync();
+
+                        TempData["success"] = "Gra usuniêta pomyœlnie";
+                        return RedirectToPage("Index");
+                    }
+                    else
+                    {
+                        TempData["error"] = "Nie mo¿na znaleŸæ gry do usuniêcia.";
+                        return RedirectToPage("Index");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    TempData["error"] = "Wyst¹pi³ b³¹d podczas usuwania gry: " + ex.Message;
+                    return RedirectToPage("Index");
+                }
             }
+
             return Page();
         }
-
     }
 }

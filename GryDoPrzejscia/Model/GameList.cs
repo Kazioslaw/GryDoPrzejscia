@@ -4,6 +4,14 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GryDoPrzejscia.Model
 {
+    public enum Launcher {
+        Amazon,
+        Epic,
+        GOG,
+        Płyta,
+        Steam,
+        Uplay
+    }
     public class GameList
     {
         [Key]
@@ -13,7 +21,7 @@ namespace GryDoPrzejscia.Model
         public string Name { get; set; }
 
         [Required]
-        public string Launcher { get; set; }
+        public Launcher Launcher { get; set; }
        
         [Column("Gram")]
         [DefaultValue(false)]

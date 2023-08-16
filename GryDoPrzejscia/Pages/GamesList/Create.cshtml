@@ -10,12 +10,20 @@
         <div asp-validation-summary="All"></div>
         <div class="mb-3">
             <label asp-for="GameList.Name"></label>
-            <input asp-for="GameList.Name" type="Text" />
+            <input asp-for="GameList.Name" type="Text" class="form-control" />
             <span asp-validation-for="GameList.Name" class="text-danger"></span>
         </div>
         <div class="mb-3">
             <label asp-for="GameList.Launcher"></label>
-            <input asp-for="GameList.Launcher" type="Text" />
+            <select asp-for="GameList.Launcher" class="form-control">
+                <option value="">Wybierz z listy</option>
+                <option value="Amazon">Amazon</option>
+                <option value="Epic">Epic</option>
+                <option value="GOG">GOG</option>
+                <option value="Płyta">Płyta</option>
+                <option value="Steam">Steam</option>
+                <option value="Uplay">Uplay</option>
+            </select>
             <span asp-validation-for="GameList.Launcher" class="text-danger"></span>
         </div>
         @*<div class="mb-3">

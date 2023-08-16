@@ -16,16 +16,24 @@
         </div>
         <div class="mb-3">
             <label asp-for="GameList.Launcher"></label>
-            <input asp-for="GameList.Launcher" class="form-control" />
+            <select asp-for="GameList.Launcher" class="form-control">
+                <option value="">Wybierz z listy</option>
+                <option value="Amazon">Amazon</option>
+                <option value="Epic">Epic</option>
+                <option value="GOG">GOG</option>
+                <option value="Płyta">Płyta</option>
+                <option value="Steam">Steam</option>
+                <option value="Uplay">Uplay</option>
+            </select>
             <span asp-validation-for="GameList.Launcher" class="text-danger"></span>
         </div>
         <div class="mb-3">
             <label asp-for="GameList.isPlayed"></label>
-            <input asp-for="GameList.isPlayed" type="checkbox" name="Gram" />
+            <input asp-for="GameList.isPlayed" type="checkbox" name="GameList.isPlayed" />
         </div>
         <div class="mb-3">
             <label asp-for="GameList.isFinished"></label>
-            <input asp-for="GameList.isFinished" type="checkbox" name="Przeszedłem" />
+            <input asp-for="GameList.isFinished" type="checkbox" name="GameList.isFinished" />
         </div>
         <button type="submit" class="btn btn-primary" style="width:150px">Update</button>
         <a asp-page="Index" class="btn btn-secondary" style="width:150px;">Back To Lists</a>
