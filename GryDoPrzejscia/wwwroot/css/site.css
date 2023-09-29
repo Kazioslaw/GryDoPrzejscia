@@ -20,3 +20,12 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+#searchInput{
+    display: none
+}
+
+#searchContainer{
+    display: flex;
+    gap: 4px;
+}

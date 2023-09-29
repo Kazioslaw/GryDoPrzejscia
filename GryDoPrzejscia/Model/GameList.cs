@@ -6,6 +6,8 @@ namespace GryDoPrzejscia.Model
 {
     public enum Launcher {
         Amazon,
+        [Display(Name = "EA App")]
+        EA_App,
         Epic,
         GOG,
         Płyta,

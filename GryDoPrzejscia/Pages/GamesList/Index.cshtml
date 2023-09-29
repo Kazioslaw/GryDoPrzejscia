@@ -1,64 +1,81 @@
 ﻿@page
 @model GryDoPrzejscia.Pages.GamesList.IndexModel
 
+@{
+    ViewData["Title"] = "Lista gier";
+}
+
 <div class="container p-3">
     <div class="row pt-4">
         <div class="col-6">
-            <h2 class="text-primary">Lista gier do przejścia</h2>
+            <h2 class="text-primary">Lista gier</h2>
         </div>
         <div class="col-6 text-end">
             <a asp-page="create" class="btn btn-primary">
-                <i class="bi bi-database-add"></i> &nbsp;Add new Game
+                <i class="bi bi-database-add"></i> &nbsp;Add new game
             </a>
         </div>
     </div>
     <br /><br />
 
     <div class="row pb-3">
-        <div class="col-12">
+        <div class="col-12" id="searchContainer">                        
             <input id="searchInput" type="text" class="form-control" placeholder="Wyszukaj grę...">
+            <button class="btn btn-secondary" onclick="toggleSearch()"><i class="bi bi-search"></i></button>
         </div>
     </div>
 
-    <table class="table table-bordered table-striped" style="width:100%">
+    <table id="listaGier" class="table table-bordered table-striped" style="width:100%">
         <thead>
             <tr>
-                <th>
-                    Nazwa Gry
+                <th style="text-align:center">
+                    Nazwa
                 </th>
-                <th>
+                <th style="text-align:center">
                     Launcher
                 </th>
-                <th>
+                <th style="text-align:center">
                     Gram
                 </th>
-                <th>
+                <th style="text-align:center">
                     Skończyłem
                 </th>
+                <th style="text-align:center; width:25%"></th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var obj in Model.GamesList)
+            @{
+                var sortedGames = Model.GameList.OrderByDescending(item => item.isPlayed);
+                sortedGames = sortedGames.OrderBy(item => item.isFinished);
+            }
+            @foreach (var item in sortedGames)
             {
-                <tr>
+                <tr style ="vertical-align: middle">
                     <td>
-                        @obj.Name
+                        @Html.DisplayFor(modelItem => item.Name)
                     </td>
                     <td>
-                        @obj.Launcher
+                        @Html.DisplayFor(modelItem => item.Launcher)
                     </td>
                     <td>
-                        <input type="checkbox" @(obj.isPlayed ? "checked" : "") disabled>
+                        <div style="display: flex; justify-content: center;">
+                            @Html.DisplayFor(modelItem => item.isPlayed)
+                        </div>
                     </td>
                     <td>
-                        <input type="checkbox" @(obj.isFinished ? "checked" : "") disabled>
+                        <div style="display: flex; justify-content: center;">
+                            @Html.DisplayFor(modelItem => item.isFinished)
+                        </div>
                     </td>
                     <td>
                         <div class="w-75 btn-group" role="group">
-                            <a asp-page="Edit" asp-route-id="@obj.Id" class="btn btn-primary mx-2">
+                            <a asp-page="./Edit" asp-route-id="@item.Id" class="btn btn-primary mx-2">
                                 <i class="bi bi-pencil-square"></i>
                             </a>
-                            <a asp-page="Delete" asp-route-id="@obj.Id" class="btn btn-danger mx-2">
+                            <a asp-page="./Details" asp-route-id="@item.Id" class="btn btn-secondary mx-2">
+                                <i class="bi bi-clipboard2-data-fill"></i>
+                            </a>
+                            <a asp-page="./Delete" asp-route-id="@item.Id" class="btn btn-danger mx-2">
                                 <i class="bi bi-trash"></i>
                             </a>
                         </div>
@@ -70,17 +87,27 @@
 </div>
 
 <script>
+
     document.getElementById("searchInput").addEventListener("input", function () {
-        var searchText = this.value.toLowerCase();
+        var searchText = this.value.trim().toLowerCase();
         var rows = document.querySelectorAll("tbody tr");
 
         rows.forEach(function (row) {
             var nameCell = row.querySelector("td:nth-child(1)");
             var launcherCell = row.querySelector("td:nth-child(2)");
             var isVisible = nameCell.textContent.toLowerCase().includes(searchText) ||
-                            launcherCell.textContent.toLowerCase().includes(searchText);
-
+                launcherCell.textContent.toLowerCase().includes(searchText);
             row.style.display = isVisible ? "" : "none";
         });
     });
+
+    function toggleSearch() {
+        var searchBox = document.getElementById('searchInput');
+        if (searchBox.style.display === 'none' || searchBox.style.display === '') {
+            searchBox.style.display = 'block';
+        } else {
+            searchBox.style.display = 'none';
+        }
+    }
+
 </script>

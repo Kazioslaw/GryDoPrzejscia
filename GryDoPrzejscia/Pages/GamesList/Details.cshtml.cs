@@ -10,17 +10,16 @@ using GryDoPrzejscia.Model;
 
 namespace GryDoPrzejscia.Pages.GamesList
 {
-    public class DeleteModel : PageModel
+    public class DetailsModel : PageModel
     {
         private readonly GryDoPrzejscia.Data.ApplicationDbContext _context;
 
-        public DeleteModel(GryDoPrzejscia.Data.ApplicationDbContext context)
+        public DetailsModel(GryDoPrzejscia.Data.ApplicationDbContext context)
         {
             _context = context;
         }
 
-        [BindProperty]
-      public GameList GameList { get; set; } = default!;
+      public GameList GameList { get; set; } = default!; 
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -30,7 +29,6 @@ namespace GryDoPrzejscia.Pages.GamesList
             }
 
             var gamelist = await _context.GameList.FirstOrDefaultAsync(m => m.Id == id);
-
             if (gamelist == null)
             {
                 return NotFound();
@@ -40,24 +38,6 @@ namespace GryDoPrzejscia.Pages.GamesList
                 GameList = gamelist;
             }
             return Page();
-        }
-
-        public async Task<IActionResult> OnPostAsync(int? id)
-        {
-            if (id == null || _context.GameList == null)
-            {
-                return NotFound();
-            }
-            var gamelist = await _context.GameList.FindAsync(id);
-
-            if (gamelist != null)
-            {
-                GameList = gamelist;
-                _context.GameList.Remove(GameList);
-                await _context.SaveChangesAsync();
-            }
-            TempData["success"] = "Poprawnie usunięto Grę";
-            return RedirectToPage("./Index");
         }
     }
 }

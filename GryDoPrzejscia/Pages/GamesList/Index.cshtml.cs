@@ -1,21 +1,32 @@
-using GryDoPrzejscia.Data;
-using GryDoPrzejscia.Model;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
+using GryDoPrzejscia.Data;
+using GryDoPrzejscia.Model;
 
-namespace GryDoPrzejscia.Pages.GamesList;
-public class IndexModel : PageModel
+namespace GryDoPrzejscia.Pages.GamesList
 {
-    private readonly ApplicationDbContext _db;
-    public IEnumerable<GameList> GamesList { get; set; }
-
-    public IndexModel(ApplicationDbContext db)
+    public class IndexModel : PageModel
     {
-        _db = db;
-    }
+        private readonly GryDoPrzejscia.Data.ApplicationDbContext _context;
 
-    public void OnGet()
-    {
-        GamesList = _db.GameList;
+        public IndexModel(GryDoPrzejscia.Data.ApplicationDbContext context)
+        {
+            _context = context;
+        }
+
+        public IList<GameList> GameList { get;set; } = default!;
+
+        public async Task OnGetAsync()
+        {
+            if (_context.GameList != null)
+            {
+                GameList = await _context.GameList.ToListAsync();
+            }
+        }
     }
 }

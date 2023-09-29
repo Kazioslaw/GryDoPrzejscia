@@ -1,37 +1,46 @@
-using GryDoPrzejscia.Data;
-using GryDoPrzejscia.Model;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using GryDoPrzejscia.Data;
+using GryDoPrzejscia.Model;
 
 namespace GryDoPrzejscia.Pages.GamesList
 {
     public class CreateModel : PageModel
     {
-        private readonly ApplicationDbContext _db;
+        private readonly GryDoPrzejscia.Data.ApplicationDbContext _context;
 
-        [BindProperty]
-        public GameList GameList { get; set; }
-
-        public CreateModel(ApplicationDbContext db)
+        public CreateModel(GryDoPrzejscia.Data.ApplicationDbContext context)
         {
-            _db = db;
-        }
-        public void OnGet()
-        {
-
+            _context = context;
         }
 
-        public async Task<IActionResult> OnPost()
-        {            
-            if (ModelState.IsValid)
-            {
-                await _db.GameList.AddAsync(GameList);
-                await _db.SaveChangesAsync();
-                TempData["success"] = "Gra dodana pomy�lnie";
-                return RedirectToPage("Index");
-            }
+        public IActionResult OnGet()
+        {
             return Page();
         }
 
+        [BindProperty]
+        public GameList GameList { get; set; } = default!;
+        
+
+        // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
+        public async Task<IActionResult> OnPostAsync()
+        {
+          if (!ModelState.IsValid || _context.GameList == null || GameList == null)
+            {
+                return Page();
+            }
+
+            _context.GameList.Add(GameList);
+            await _context.SaveChangesAsync();
+            TempData["success"] = "Poprawnie dodano Grę";
+
+            return RedirectToPage("./Index");
+        }
     }
 }

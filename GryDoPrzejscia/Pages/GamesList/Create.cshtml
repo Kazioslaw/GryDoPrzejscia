@@ -1,46 +1,54 @@
 ﻿@page
 @model GryDoPrzejscia.Pages.GamesList.CreateModel
 
-<form method="post">
-    <div class="border p-3 mt-4">
-        <div class="row pb-2">
-            <h2 class="text-primary pl-3">Add new Game to list</h2>
-            <hr />
-        </div>
-        <div asp-validation-summary="All"></div>
-        <div class="mb-3">
-            <label asp-for="GameList.Name"></label>
-            <input asp-for="GameList.Name" type="Text" class="form-control" />
-            <span asp-validation-for="GameList.Name" class="text-danger"></span>
-        </div>
-        <div class="mb-3">
-            <label asp-for="GameList.Launcher"></label>
-            <select asp-for="GameList.Launcher" class="form-control">
-                <option value="">Wybierz z listy</option>
-                <option value="Amazon">Amazon</option>
-                <option value="Epic">Epic</option>
-                <option value="GOG">GOG</option>
-                <option value="Płyta">Płyta</option>
-                <option value="Steam">Steam</option>
-                <option value="Uplay">Uplay</option>
-            </select>
-            <span asp-validation-for="GameList.Launcher" class="text-danger"></span>
-        </div>
-        @*<div class="mb-3">
-        <label asp-for="GameList.isPlayed"></label>
-        <input asp-for="GameList.isPlayed" type="checkbox" name="isPlayed" />
-        </div>
-        <div class="mb-3">
-        <label asp-for="GameList.IsFinished"></label>
-        <input asp-for="GameList.IsFinished" type="checkbox" name="isFinished" />
-        </div>*@
-        <button type="submit" class="btn btn-primary" style="width:150px;">Add</button>
-        <a asp-page="Index" class="btn btn-secondary" style="width:150px;">Back To Lists</a>
-    </div>
-</form>
+@{
+    ViewData["Title"] = "Dodaj nową grę";
+}
 
-@section Scripts{
-    @{
-        <partial name="_ValidationScriptsPartial" />
-    }
+<h1>Dodaj nową grę</h1>
+<hr />
+<div class="row">
+    <div class="col-md-6">
+        <form method="post">
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="GameList.Name" class="control-label"></label>
+                <input asp-for="GameList.Name" class="form-control" />
+                <span asp-validation-for="GameList.Name" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="GameList.Launcher" class="control-label"></label>
+                <select asp-for="GameList.Launcher" class="form-control">
+                    <option value="">Wybierz z listy</option>
+                    <option value="Amazon">Amazon</option>
+                    <option value="EA_App">EA App</option>
+                    <option value="Epic">Epic</option>
+                    <option value="GOG">GOG</option>
+                    <option value="Płyta">Płyta</option>
+                    <option value="Steam">Steam</option>
+                    <option value="Uplay">Uplay</option>
+                </select>
+                <span asp-validation-for="GameList.Launcher" class="text-danger"></span>
+            </div>
+            @*<div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="GameList.isPlayed" /> @Html.DisplayNameFor(model => model.GameList.isPlayed)
+                </label>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="GameList.isFinished" /> @Html.DisplayNameFor(model => model.GameList.isFinished)
+                </label>
+            </div>*@
+            <div>
+                <button type="submit" class="btn btn-primary" style="width: auto">Dodaj</button>
+                <a asp-page="./Index" class="btn btn-secondary" style="width: auto">Wróć do listy gier</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
