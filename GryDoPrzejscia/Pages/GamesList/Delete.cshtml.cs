@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using GryDoPrzejscia.Data;
 using GryDoPrzejscia.Model;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace GryDoPrzejscia.Pages.GamesList
 {
@@ -20,8 +21,16 @@ namespace GryDoPrzejscia.Pages.GamesList
         }
 
         [BindProperty]
-      public GameList GameList { get; set; } = default!;
+        [SwaggerSchema("Dane gry do usunięcia")]
+        public GameList GameList { get; set; } = default!;
 
+        [SwaggerOperation(
+            Summary = "Usuń grę",
+            Description = "Usuwa grę z listy gier na podstawie identyfikatora.",
+            OperationId = "UsunGra",
+            Tags = new[] { "Gry" })]
+        [SwaggerResponse(200, "Grę pomyślnie usunięto.")]
+        [SwaggerResponse(404, "Brak gry o podanym identyfikatorze.")]
         public async Task<IActionResult> OnGetAsync(int? id)
         {
             if (id == null || _context.GameList == null)
@@ -42,6 +51,13 @@ namespace GryDoPrzejscia.Pages.GamesList
             return Page();
         }
 
+        [SwaggerOperation(
+    Summary = "Potwierdź usunięcie gry",
+    Description = "Potwierdza usunięcie gry na podstawie identyfikatora.",
+    OperationId = "PotwierdzUsuniecieGry",
+    Tags = new[] { "Gry" })]
+        [SwaggerResponse(200, "Grę pomyślnie usunięto.")]
+        [SwaggerResponse(404, "Brak gry o podanym identyfikatorze.")]
         public async Task<IActionResult> OnPostAsync(int? id)
         {
             if (id == null || _context.GameList == null)
