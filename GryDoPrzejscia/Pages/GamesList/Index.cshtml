@@ -1,11 +1,11 @@
-﻿@page
+﻿@page "{pageIndex:int?}"
 @model GryDoPrzejscia.Pages.GamesList.IndexModel
 
 @{
 	ViewData["Title"] = "Lista gier";
 }
 
-<div class="container p-3">
+<div class="container p-1 mt-0">
 	<div class="row pt-4">
 		<div class="col-6">
 			<h2 class="text-primary">Lista gier</h2>
@@ -16,26 +16,20 @@
 			</a>
 		</div>
 	</div>
-	<br /><br />
 
-	@* <div class="row pb-3">
-	<div class="col-12" id="searchContainer">
-	<button class="btn btn-secondary" onclick="toggleSearch()"><i class="bi bi-search"></i></button>
-	<input id="searchInput" type="text" class="form-control" placeholder="Wyszukaj grę...">
-	</div>
-	</div> *@
+	<br />
 
 	<form asp-page="./Index" method="get">
 		<div class="row pb-3">
 			<div class="input-group mb-3">
-				<input type="text" class="form-control" name="SearchString" value="@Model.CurrentFilter" />
+				<input type="text" class="form-control" name="q" value="@Model.CurrentFilter" />
 				<button class="btn btn-secondary" style="border: 0 0.375rem 0.375rem 0" type="submit"><i class="bi bi-search"></i></button>
 			</div>
 		</div>
 	</form>
 
 
-	<table id="listaGier" class="table table-bordered table-striped" style="width:100%">
+	<table id="listaGier" class="table table-sm table-bordered table-striped">
 		<thead>
 			<tr>
 				<th style="text-align:center">
@@ -53,12 +47,12 @@
 				<th style="text-align:center">
 					Skończyłem
 				</th>
-				<th style="text-align:center; width:25%"></th>
+				<th style="text-align:center"></th>
 			</tr>
 		</thead>
-		<tbody>
+		<tbody class="m-1">
 			@{
-				int index = 1;
+				int index = ((Model.PageIndex - 1) * Model.PageSize) + 1;
 			}
 			@foreach (var item in Model.GameList)
 			{
@@ -82,15 +76,15 @@
 							@Html.DisplayFor(modelItem => item.isFinished)
 						</div>
 					</td>
-					<td>
-						<div class="w-75 btn-group" role="group">
-							<a asp-page="./Edit" asp-route-id="@item.Id" class="btn btn-primary mx-2">
+					<td class="d-flex justify-content-center">
+						<div class="btn-group" role="group">
+							<a asp-page="./Edit" asp-route-id="@item.Id" class="btn btn-primary mx-1">
 								<i class="bi bi-pencil-square"></i>
 							</a>
-							<a asp-page="./Details" asp-route-id="@item.Id" class="btn btn-secondary mx-2">
+							<a asp-page="./Details" asp-route-id="@item.Id" class="btn btn-secondary mx-1">
 								<i class="bi bi-clipboard2-data-fill"></i>
 							</a>
-							<a asp-page="./Delete" asp-route-id="@item.Id" class="btn btn-danger mx-2">
+							<a asp-page="./Delete" asp-route-id="@item.Id" class="btn btn-danger mx-1">
 								<i class="bi bi-trash"></i>
 							</a>
 						</div>
@@ -100,4 +94,46 @@
 		</tbody>
 	</table>
 </div>
+@{
+	var prevDisabled = Model.PageIndex > 1 ? "" : "disabled";
+	var nextDisabled = Model.PageIndex < Model.TotalPages ? "" : "disabled";
+}
 
+<nav aria-label="Page navigation">
+	<ul class="pagination justify-content-center">
+		<li class="page-item @prevDisabled">
+			<a asp-page="./Index" asp-route-pageIndex="@(Model.PageIndex - 1)" asp-route-q="@Model.CurrentFilter" class="page-link">&laquo;</a>
+		</li>
+		<li class="page-item">
+			<a asp-page="./Index" class="page-link @(Model.PageIndex == 1 ? "active" : "")" asp-route-pageIndex="1" asp-route-q="@Model.CurrentFilter">1</a>
+		</li>
+		@if (Model.PageIndex > 1)
+		{
+			@if (Model.PageIndex > 2)
+			{
+				<li class="page-item disabled"><span class="page-link">...</span></li>
+			}
+		}
+		@for (int i = Math.Max(2, Model.PageIndex - 1); i <= Math.Min(Model.TotalPages - 1, Model.PageIndex + 1); i++)
+		{
+			<li class="page-item @(Model.PageIndex == i ? "active" : "")">
+				<a asp-page="./Index" asp-route-pageIndex="@i" asp-route-q="@Model.CurrentFilter" class="page-link">@i</a>
+			</li>
+		}
+
+		@if (Model.PageIndex < Model.TotalPages - 1)
+		{
+			@if (Model.PageIndex < Model.TotalPages - 2)
+			{
+				<li class="page-item disabled"><span class="page-link">...</span></li>
+			}
+		}
+		<li class="page-item">
+			<a asp-page="./Index" class="page-link @(Model.PageIndex == Model.TotalPages ? "active" : "")" asp-route-pageIndex="@Model.TotalPages" asp-route-q="@Model.CurrentFilter">@Model.TotalPages</a>
+		</li>
+
+		<li class="page-item @nextDisabled">
+			<a asp-page="./Index" asp-route-pageIndex="@(Model.PageIndex + 1)" asp-route-q="@Model.CurrentFilter" class="page-link">&raquo;</a>
+		</li>
+	</ul>
+</nav>
