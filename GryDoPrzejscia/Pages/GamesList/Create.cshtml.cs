@@ -1,37 +1,62 @@
-using GryDoPrzejscia.Data;
-using GryDoPrzejscia.Model;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using GryDoPrzejscia.Data;
+using GryDoPrzejscia.Model;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace GryDoPrzejscia.Pages.GamesList
 {
     public class CreateModel : PageModel
     {
-        private readonly ApplicationDbContext _db;
+        private readonly ApplicationDbContext _context;
 
-        [BindProperty]
-        public GameList GameList { get; set; }
-
-        public CreateModel(ApplicationDbContext db)
+        public CreateModel(ApplicationDbContext context)
         {
-            _db = db;
-        }
-        public void OnGet()
-        {
-
+            _context = context;
         }
 
-        public async Task<IActionResult> OnPost()
-        {            
-            if (ModelState.IsValid)
-            {
-                await _db.GameList.AddAsync(GameList);
-                await _db.SaveChangesAsync();
-                TempData["success"] = "Gra dodana pomy�lnie";
-                return RedirectToPage("Index");
-            }
+        public IActionResult OnGet()
+        {
             return Page();
         }
 
+        [BindProperty]
+        [SwaggerSchema("Dane gry do dodania")]
+        public GameList GameList { get; set; } = default!;
+      
+        [SwaggerOperation(
+            Summary = "Dodaj nową grę",
+            Description = "Dodaje nową grę do listy gier.",
+            OperationId = "DodajGra",
+            Tags = new[] { "Gry" })]
+        [SwaggerResponse(200, "Grę pomyślnie dodano.")]
+        [SwaggerResponse(400, "Błąd walidacji danych.")]
+        // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
+        public async Task<IActionResult> OnPostAsync()
+        {
+          if (!ModelState.IsValid || _context.GameList == null || GameList == null)
+          {
+            return Page();
+          }
+
+            bool gameExist = _context.GameList.Any(g => g.Name.ToLower() == GameList.Name.ToLower());
+
+            if (gameExist) 
+            {
+                ModelState.AddModelError("GameList.Title", "Gra o podanym tytule jest już w bazie");
+                return Page();
+            }
+
+            _context.GameList.Add(GameList);
+            await _context.SaveChangesAsync();
+            TempData["success"] = "Poprawnie dodano Grę";
+
+            return RedirectToPage("./Index");
+        }
     }
 }

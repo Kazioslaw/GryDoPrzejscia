@@ -1,56 +1,79 @@
-using GryDoPrzejscia.Data;
-using GryDoPrzejscia.Model;
+ï»¿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
+using GryDoPrzejscia.Data;
+using GryDoPrzejscia.Model;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace GryDoPrzejscia.Pages.GamesList
 {
     public class DeleteModel : PageModel
     {
-        private readonly ApplicationDbContext _db;
+        private readonly GryDoPrzejscia.Data.ApplicationDbContext _context;
+
+        public DeleteModel(GryDoPrzejscia.Data.ApplicationDbContext context)
+        {
+            _context = context;
+        }
 
         [BindProperty]
-        public GameList GameList { get; set; }
+        [SwaggerSchema("Dane gry do usuniÄ™cia")]
+        public GameList GameList { get; set; } = default!;
 
-        public DeleteModel(ApplicationDbContext db)
+        [SwaggerOperation(
+            Summary = "UsuÅ„ grÄ™",
+            Description = "Usuwa grÄ™ z listy gier na podstawie identyfikatora.",
+            OperationId = "UsunGra",
+            Tags = new[] { "Gry" })]
+        [SwaggerResponse(200, "GrÄ™ pomyÅ›lnie usuniÄ™to.")]
+        [SwaggerResponse(404, "Brak gry o podanym identyfikatorze.")]
+        public async Task<IActionResult> OnGetAsync(int? id)
         {
-            _db = db;
-        }
-        public void OnGet(int id)
-        {
-            GameList = _db.GameList.Find(id);
-        }
-
-        public async Task<IActionResult> OnPost()
-        {
-            if (ModelState.IsValid)
+            if (id == null || _context.GameList == null)
             {
-                try
-                {
-                    var gameListFromDb = await _db.GameList.FindAsync(GameList.Id);
-
-                    if (gameListFromDb != null)
-                    {
-                        _db.GameList.Remove(gameListFromDb);
-                        await _db.SaveChangesAsync();
-
-                        TempData["success"] = "Gra usuniêta pomyœlnie";
-                        return RedirectToPage("Index");
-                    }
-                    else
-                    {
-                        TempData["error"] = "Nie mo¿na znaleŸæ gry do usuniêcia.";
-                        return RedirectToPage("Index");
-                    }
-                }
-                catch (Exception ex)
-                {
-                    TempData["error"] = "Wyst¹pi³ b³¹d podczas usuwania gry: " + ex.Message;
-                    return RedirectToPage("Index");
-                }
+                return NotFound();
             }
 
+            var gamelist = await _context.GameList.FirstOrDefaultAsync(m => m.Id == id);
+
+            if (gamelist == null)
+            {
+                return NotFound();
+            }
+            else 
+            {
+                GameList = gamelist;
+            }
             return Page();
+        }
+
+        [SwaggerOperation(
+    Summary = "PotwierdÅº usuniÄ™cie gry",
+    Description = "Potwierdza usuniÄ™cie gry na podstawie identyfikatora.",
+    OperationId = "PotwierdzUsuniecieGry",
+    Tags = new[] { "Gry" })]
+        [SwaggerResponse(200, "GrÄ™ pomyÅ›lnie usuniÄ™to.")]
+        [SwaggerResponse(404, "Brak gry o podanym identyfikatorze.")]
+        public async Task<IActionResult> OnPostAsync(int? id)
+        {
+            if (id == null || _context.GameList == null)
+            {
+                return NotFound();
+            }
+            var gamelist = await _context.GameList.FindAsync(id);
+
+            if (gamelist != null)
+            {
+                GameList = gamelist;
+                _context.GameList.Remove(GameList);
+                await _context.SaveChangesAsync();
+            }
+            TempData["success"] = "Poprawnie usuniÄ™to GrÄ™";
+            return RedirectToPage("./Index");
         }
     }
 }
