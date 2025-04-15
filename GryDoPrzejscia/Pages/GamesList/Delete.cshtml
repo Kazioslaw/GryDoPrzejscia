@@ -2,45 +2,45 @@
 @model GryDoPrzejscia.Pages.GamesList.DeleteModel
 
 @{
-    ViewData["Title"] = "Delete";
+	ViewData["Title"] = "Delete";
 }
 
 <h1>Delete</h1>
 
 <h3>Are you sure you want to delete this?</h3>
 <div>
-    <h4>GameList</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.GameList.Name)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.GameList.Name)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.GameList.Launcher)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.GameList.Launcher)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.GameList.isPlayed)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.GameList.isPlayed)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.GameList.isFinished)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.GameList.isFinished)
-        </dd>
-    </dl>
-    
-    <form method="post">
-        <input type="hidden" asp-for="GameList.Id" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-page="./Index">Back to List</a>
-    </form>
+	<h4>GameList</h4>
+	<hr />
+	<dl class="row">
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.GameList.Name)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.GameList.Name)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.GameList.Launcher)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.GameList.Launcher)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.GameList.isPlayed)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.GameList.isPlayed)
+		</dd>
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.GameList.isFinished)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.GameList.isFinished)
+		</dd>
+	</dl>
+
+	<form method="post">
+		<input type="hidden" asp-for="GameList.Id" />
+		<input type="submit" value="Delete" class="btn btn-danger" /> |
+		<a asp-page="./Index" class="btn btn-secondary">Back to List</a>
+	</form>
 </div>
